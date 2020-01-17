@@ -1,3 +1,8 @@
+document.querySelector(".clear").addEventListener("click", () => {
+    location.reload() //TODO: ändra till att bara ladda om spelytan ifall man ska kunna följa poäng etc.
+})
+
+
 const rutor = 3
 
 const gamearea = document.querySelector(".gamearea")
