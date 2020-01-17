@@ -1,0 +1,65 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+}
+
+.gamearea {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    grid-gap: 0;
+}
+
+.box {
+    position: relative;
+}
+
+.box:hover,
+.box:focus {
+    cursor: pointer;
+    /* border: 2px solid #000; */
+    outline: #000 solid;
+}
+
+.box:nth-child(odd) {
+    background: #7a7aff;
+}
+
+.box:nth-child(even) {
+    background: #7aff7a;
+}
+
+.box::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40pt;
+}
+
+.box[data-type="x"]::after {
+    content: "X";
+}
+
+.box[data-type="o"]::after {
+    content: "O";
+}
+
+.vinnare {
+    border: none;
+    border: 2px solid #f00;
+}
+
+.vinnare::after {
+    font-size: 50pt;
+    font-weight: bold;
+}
