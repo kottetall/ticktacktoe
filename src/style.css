@@ -2,15 +2,19 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    background: #d4565699;
+    background: rgba(212, 86, 86, 0.85);
+    height: 100vh;
 }
 
 h1 {
     text-align: center;
     font-size: 30pt;
+    margin-top: 10vh;
+    text-transform: uppercase;
 }
 
 .clear {
@@ -31,7 +35,10 @@ h1 {
     text-decoration: underline;
 }
 
+
+
 .gamearea {
+    background: #fff;
     position: absolute;
     top: 50vh;
     left: 50vw;
@@ -39,18 +46,24 @@ h1 {
     display: grid;
     grid-template-columns: repeat(3, 100px);
     grid-template-rows: repeat(3, 100px);
-    grid-gap: 0;
+    grid-gap: 2px;
 }
 
 .box {
     position: relative;
+    border: 1px solid;
 }
 
 .box:hover,
 .box:focus {
     cursor: pointer;
-    /* border: 2px solid #000; */
     outline: #000 solid;
+}
+
+.gamearea[data-results="true"] .box:hover,
+.gamearea[data-results="true"] .box:focus {
+    cursor: default;
+    outline: none;
 }
 
 .box:nth-child(odd) {
@@ -77,14 +90,66 @@ h1 {
     content: "O";
 }
 
+.taken {
+    animation: busy 100ms linear 1 alternate;
+}
+
+@keyframes busy {
+    0% {
+        left: -5%;
+    }
+
+    100% {
+        left: 5%;
+    }
+}
+
 .vinnare {
     border: none;
-    border: 2px solid #f00;
+    border: 3px solid #f00;
 }
 
 .vinnare::after {
     font-size: 50pt;
     font-weight: bold;
+}
+
+.result {
+    background: radial-gradient(#7aff7a, #7a7aff);
+    padding: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 18pt;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    border-radius: 50px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    color: #000;
+}
+
+.gamearea[data-results="true"] .overlay {
+    opacity: 0.4;
+    transition: opacity 500ms linear;
+}
+
+.overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: #aaa;
+}
+
+.showResult {
+    opacity: 1;
+    transition: opacity 1s linear 200ms;
 }
 
 footer {

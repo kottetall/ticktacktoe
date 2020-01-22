@@ -1,6 +1,4 @@
-document.querySelector(".clear").addEventListener("click", () => {
-    location.reload() //TODO: ändra till att bara ladda om spelytan ifall man ska kunna följa poäng etc.
-})
+document.querySelector(".clear").addEventListener("click", reset)
 
 
 const rutor = 3
@@ -22,97 +20,115 @@ gamearea.addEventListener("click", (e) => {
 
     const valdRuta = e.target
 
-    if (valdRuta.dataset.marked !== "true") {
-        valdRuta.dataset.marked = true
-        valdRuta.dataset.type = playerturn % 2 ? "x" : "o"
-        playerturn++
-    } else {
-        alert("Upptaget")
-        //TODO: fixa ordentlig markering ex genom röda gränser om rutan
-    }
+    if (document.querySelector(".gamearea").dataset.results === "false") {
+        if (valdRuta.dataset.marked !== "true") {
+            valdRuta.dataset.marked = true
+            valdRuta.dataset.type = playerturn % 2 ? "x" : "o"
+            playerturn++
+        } else {
+            valdRuta.classList.add("taken")
+            valdRuta.addEventListener("animationend", () => {
+                valdRuta.classList.remove("taken")
+            })
+        }
 
-    // KONTROLL
-    const results = []
-    for (const box of boxes) {
-        results.push(box.dataset.type)
-    }
+        // KONTROLL
+        const results = []
+        for (const box of boxes) {
+            results.push(box.dataset.type)
+        }
 
-    let vinnandeSpel = false
+        let vinnandeSpel = false
 
-    for (i = 0; i < Math.sqrt(results.length); i++) {
+        for (i = 0; i < Math.sqrt(results.length); i++) {
 
 
 
-        // DIAGONALER - FUNKAR!
-        if (i === 0) {
-            if (results[i] === results[i + 4] && results[i] === results[i + 8] &&
-                results[i] && results[i + 4] && results[i + 8]) {
+            // DIAGONALER - FUNKAR!
+            if (i === 0) {
+                if (results[i] === results[i + 4] && results[i] === results[i + 8] &&
+                    results[i] && results[i + 4] && results[i + 8]) {
 
-                const vinstrad = [boxes[i], boxes[i + 4], boxes[i + 8]]
-                vinst(valdRuta.dataset.type, "Diagonal 1", vinstrad)
+                    const vinstrad = [boxes[i], boxes[i + 4], boxes[i + 8]]
+                    vinst(valdRuta.dataset.type, "Diagonal 1", vinstrad)
+                    vinnandeSpel = true
+
+                } else if (results[i + 2] === results[i + 4] && results[i + 2] === results[i + 6] &&
+                    results[i + 2] && results[i + 4] && results[i + 6]) {
+
+                    const vinstrad = [boxes[i + 2], boxes[i + 4], boxes[i + 6]]
+                    vinst(valdRuta.dataset.type, "Diagonal 1", vinstrad)
+                    vinnandeSpel = true
+                }
+            }
+
+
+            //rader
+            let rowNode = i + 2 * i
+
+            if (
+                results[rowNode] === results[rowNode + 1] &&
+                results[rowNode] === results[rowNode + 2] &&
+                results[rowNode] &&
+                results[rowNode + 1] &&
+                results[rowNode + 2]
+            ) {
+
+                const vinstrad = [boxes[rowNode], boxes[rowNode + 1], boxes[rowNode + 2]]
+                vinst(valdRuta.dataset.type, "Rad " + i, vinstrad)
                 vinnandeSpel = true
 
-            } else if (results[i + 2] === results[i + 4] && results[i + 2] === results[i + 6] &&
-                results[i + 2] && results[i + 4] && results[i + 6]) {
+            }
 
-                const vinstrad = [boxes[i + 2], boxes[i + 4], boxes[i + 6]]
-                vinst(valdRuta.dataset.type, "Diagonal 1", vinstrad)
+            //KOLUMNER
+            else if (
+                results[i] === results[i + 3] &&
+                results[i] === results[i + 6] &&
+                results[i] &&
+                results[i + 3] &&
+                results[i + 6]
+            ) {
+
+                const vinstrad = [boxes[i], boxes[i + 3], boxes[i + 6]]
+                vinst(valdRuta.dataset.type, "Kolumn " + i, vinstrad)
                 vinnandeSpel = true
+
+            }
+
+        }
+
+        if (!vinnandeSpel) {
+            if (!results.includes(undefined)) {
+                viewResults("draw")
             }
         }
-
-
-        //rader
-        let rowNode = i + 2 * i
-
-        if (
-            results[rowNode] === results[rowNode + 1] &&
-            results[rowNode] === results[rowNode + 2] &&
-            results[rowNode] &&
-            results[rowNode + 1] &&
-            results[rowNode + 2]
-        ) {
-
-            const vinstrad = [boxes[rowNode], boxes[rowNode + 1], boxes[rowNode + 2]]
-            vinst(valdRuta.dataset.type, "Rad " + i, vinstrad)
-            vinnandeSpel = true
-
-        }
-
-        //KOLUMNER
-        else if (
-            results[i] === results[i + 3] &&
-            results[i] === results[i + 6] &&
-            results[i] &&
-            results[i + 3] &&
-            results[i + 6]
-        ) {
-
-            const vinstrad = [boxes[i], boxes[i + 3], boxes[i + 6]]
-            vinst(valdRuta.dataset.type, "Kolumn " + i, vinstrad)
-            vinnandeSpel = true
-
-        }
-
     }
-
-    if (!vinnandeSpel) {
-        if (!results.includes(undefined)) {
-            alert("Oavgjort!")
-            // TODO: Snygga till
-        }
-    }
-
 })
 
 function vinst(typ, plats, vinstBoxar) {
-    console.log("vinst för: " + typ)
-    console.log(plats)
 
-    console.log(vinstBoxar)
+    viewResults("vinst", typ)
 
     for (const box of vinstBoxar) {
         box.classList.add("vinnare")
     }
+}
 
+function viewResults(typ, spelare) {
+    const gamearea = document.querySelector(".gamearea")
+    gamearea.dataset.results = "true"
+    const resultView = document.querySelector(".result")
+
+    resultView.classList.add("showResult")
+    if (typ === "vinst") {
+        resultView.textContent = `${spelare} won the game!`
+    } else {
+        resultView.textContent = `It's a draw!`
+    }
+
+    gamearea.addEventListener("click", reset)
+}
+
+function reset() {
+    location.reload()
 }
