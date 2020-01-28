@@ -13,7 +13,7 @@ body {
 h1 {
     text-align: center;
     font-size: 30pt;
-    margin-top: 10vh;
+    padding-top: 10vh;
     text-transform: uppercase;
 }
 
