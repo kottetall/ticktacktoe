@@ -7,14 +7,7 @@
 
 body {
     background: rgba(212, 86, 86, 0.85);
-    height: 100vh;
-}
-
-h1 {
-    text-align: center;
-    font-size: 30pt;
-    padding-top: 10vh;
-    text-transform: uppercase;
+    min-height: 80vh;
 }
 
 .clear {
@@ -38,14 +31,15 @@ h1 {
 
 
 .gamearea {
+    --box-size: calc(min(100vh, 100vw) * 0.8 / 3);
     background: #fff;
     position: absolute;
     top: 50vh;
     left: 50vw;
     transform: translate(-50%, -50%);
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
+    grid-template-columns: repeat(3, var(--box-size));
+    grid-template-rows: repeat(3, var(--box-size));
     grid-gap: 2px;
 }
 
@@ -121,9 +115,8 @@ h1 {
     font-weight: bold;
     font-size: 18pt;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    height: 100%;
+    width: 100%;
     z-index: 5;
     border-radius: 50px;
     text-align: center;
@@ -150,19 +143,19 @@ h1 {
 .showResult {
     opacity: 1;
     transition: opacity 1s linear 200ms;
+    animation: pulse 2s linear infinite;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    background: #000;
-    padding: 20px;
-}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
 
-footer a {
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #fff;
+    66% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
